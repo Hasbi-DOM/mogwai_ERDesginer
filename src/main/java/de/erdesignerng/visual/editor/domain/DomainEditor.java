@@ -89,7 +89,8 @@ public class DomainEditor extends BaseEditor {
 
         model = aModel;
         domainEditor = new ModelItemNameCellEditor<>(model.getDialect());
-        editingView.getDomainTable().getColumnModel().getColumn(0).setCellRenderer(ModelItemDefaultCellRenderer.getInstance());
+        editingView.getDomainTable().getColumnModel().getColumn(0)
+                .setCellRenderer(ModelItemDefaultCellRenderer.getInstance());
         editingView.getDomainTable().getColumnModel().getColumn(0).setCellEditor(domainEditor);
         editingView.getDomainTable().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -147,8 +148,8 @@ public class DomainEditor extends BaseEditor {
                 removedDomains.add(theDomain);
             }
         } else {
-            MessagesHelper.displayErrorMessage(this, getResourceHelper().getFormattedText(
-                    ERDesignerBundle.DOMAINISINUSEBYTABLE, theTable.getName()));
+            MessagesHelper.displayErrorMessage(this,
+                    getResourceHelper().getFormattedText(ERDesignerBundle.DOMAINISINUSEBYTABLE, theTable.getName()));
         }
     }
 
@@ -194,7 +195,8 @@ public class DomainEditor extends BaseEditor {
     }
 
     /**
-     * Will be called if editing of a domain name was canceled and the name is null or empty.
+     * Will be called if editing of a domain name was canceled and the name is null
+     * or empty.
      *
      * @param aDomain
      */

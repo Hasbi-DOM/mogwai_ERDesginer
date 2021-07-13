@@ -73,21 +73,28 @@ public class TableEditor extends BaseEditor {
 
 	private final List<Index> removedIndexes = new ArrayList<>();
 
-	private final DefaultAction newAttributeAction = new DefaultAction(e -> commandNewAttribute(), this, ERDesignerBundle.NEW);
+	private final DefaultAction newAttributeAction = new DefaultAction(e -> commandNewAttribute(), this,
+			ERDesignerBundle.NEW);
 
-	private final DefaultAction deleteAttributeAction = new DefaultAction(e -> commandDeleteAttribute(e), this, ERDesignerBundle.DELETE);
+	private final DefaultAction deleteAttributeAction = new DefaultAction(e -> commandDeleteAttribute(e), this,
+			ERDesignerBundle.DELETE);
 
 	private final DefaultAction newIndexAction = new DefaultAction(e -> commandNewIndex(), this, ERDesignerBundle.NEW);
 
-	private final DefaultAction deleteIndexAction = new DefaultAction(e -> commandDeleteIndex(), this, ERDesignerBundle.DELETE);
+	private final DefaultAction deleteIndexAction = new DefaultAction(e -> commandDeleteIndex(), this,
+			ERDesignerBundle.DELETE);
 
-	private final DefaultAction updateIndex = new DefaultAction(e -> commandUpdateIndex(), this, ERDesignerBundle.UPDATE);
+	private final DefaultAction updateIndex = new DefaultAction(e -> commandUpdateIndex(), this,
+			ERDesignerBundle.UPDATE);
 
-	private final DefaultAction addIndexAttribute = new DefaultAction(e -> commandAddIndexAttribute(), this, ERDesignerBundle.NEWONLYICON);
+	private final DefaultAction addIndexAttribute = new DefaultAction(e -> commandAddIndexAttribute(), this,
+			ERDesignerBundle.NEWONLYICON);
 
-	private final DefaultAction addIndexExpression = new DefaultAction(e -> commandAddIndexExpression(), this, ERDesignerBundle.NEWONLYICON);
+	private final DefaultAction addIndexExpression = new DefaultAction(e -> commandAddIndexExpression(), this,
+			ERDesignerBundle.NEWONLYICON);
 
-	private final DefaultAction removeIndexElement = new DefaultAction(e -> commandRemoveIndexElement(), this, ERDesignerBundle.DELETEONLYICON);
+	private final DefaultAction removeIndexElement = new DefaultAction(e -> commandRemoveIndexElement(), this,
+			ERDesignerBundle.DELETEONLYICON);
 
 	private TableProperties tableProperties;
 
@@ -105,13 +112,14 @@ public class TableEditor extends BaseEditor {
 
 		DefaultComboBoxModel dataTypesModel = editingView.getDataTypeModel();
 
-        aModel.getAvailableDataTypes().forEach(dataTypesModel::addElement);
+		aModel.getAvailableDataTypes().forEach(dataTypesModel::addElement);
 
 		indexListModel = editingView.getIndexList().getModel();
 
 		model = aModel;
 		attributeEditor = new ModelItemNameCellEditor<>(model.getDialect());
-		editingView.getAttributesTable().getColumnModel().getColumn(0).setCellRenderer(new AttributeListAttributeCellRenderer(this));
+		editingView.getAttributesTable().getColumnModel().getColumn(0)
+				.setCellRenderer(new AttributeListAttributeCellRenderer(this));
 		editingView.getAttributesTable().getColumnModel().getColumn(0).setCellEditor(attributeEditor);
 		editingView.getAttributesTable().getSelectionModel().addListSelectionListener(e -> updateAttributeEditFields());
 
@@ -120,8 +128,7 @@ public class TableEditor extends BaseEditor {
 		tableBindingInfo.configure();
 
 		indexBindingInfo.addBinding("name", editingView.getIndexName(), true);
-		indexBindingInfo.addBinding("attributes", new IndexAttributesPropertyAdapter(editingView.getIndexFieldList()
-		));
+		indexBindingInfo.addBinding("attributes", new IndexAttributesPropertyAdapter(editingView.getIndexFieldList()));
 
 		RadioButtonAdapter theAdapter = new RadioButtonAdapter();
 		theAdapter.addMapping(IndexType.PRIMARYKEY, editingView.getPrimaryIndex());
@@ -230,27 +237,31 @@ public class TableEditor extends BaseEditor {
 	protected void commandOk() {
 
 		if (editingView.getAddExpressionToIndexButton().isEnabled() && indexExpressionBindingInfo.isChanged()) {
-			MessagesHelper.displayErrorMessage(this, getResourceHelper().getFormattedText(
-					ERDesignerBundle.SAVEINDEXCHANGESFIRST));
+			MessagesHelper.displayErrorMessage(this,
+					getResourceHelper().getFormattedText(ERDesignerBundle.SAVEINDEXCHANGESFIRST));
 			return;
 		}
 
 		if (editingView.getAddAttributeToIndexButton().isEnabled() && indexExpressionBindingInfo2.isChanged()) {
-			MessagesHelper.displayErrorMessage(this, getResourceHelper().getFormattedText(
-					ERDesignerBundle.SAVEINDEXCHANGESFIRST));
+			MessagesHelper.displayErrorMessage(this,
+					getResourceHelper().getFormattedText(ERDesignerBundle.SAVEINDEXCHANGESFIRST));
 			return;
 		}
 
 		if (indexBindingInfo.isChanged()) {
-			MessagesHelper.displayErrorMessage(this, getResourceHelper().getFormattedText(
-					ERDesignerBundle.SAVEINDEXCHANGESFIRST));
+			MessagesHelper.displayErrorMessage(this,
+					getResourceHelper().getFormattedText(ERDesignerBundle.SAVEINDEXCHANGESFIRST));
 			return;
 		}
 
 		if (tableBindingInfo.validate().isEmpty()) {
 			if (editingView.getAttributeTableModel().getRowCount() == 0) {
-				MessagesHelper.displayErrorMessage(this, getResourceHelper().getText(
-						ERDesignerBundle.TABLEMUSTHAVEATLEASTONEATTRIBUTE));
+				MessagesHelper.displayErrorMessage(this,
+						getResourceHelper().getText(ERDesignerBundle.TABLEMUSTHAVEATLEASTONEATTRIBUTE));
+				return;
+			} else if (MessagesHelper.displayQuestionMessage(this, ERDesignerBundle.DOYOUREALLYWANTTOSAVECHANGES)) {
+				setModalResult(MODAL_RESULT_OK);
+			} else {
 				return;
 			}
 			try {
@@ -401,16 +412,16 @@ public class TableEditor extends BaseEditor {
 
 		if (model.checkIfUsedAsForeignKey(tableBindingInfo.getDefaultModel(), theAttribute)) {
 
-			MessagesHelper.displayErrorMessage(this, getResourceHelper().getText(
-					ERDesignerBundle.ATTRIBUTEISUSEDINFOREIGNKEYS));
+			MessagesHelper.displayErrorMessage(this,
+					getResourceHelper().getText(ERDesignerBundle.ATTRIBUTEISUSEDINFOREIGNKEYS));
 
 			return;
 		}
 
 		if (isUsedInIndex(theAttribute)) {
 
-			MessagesHelper.displayErrorMessage(this, getResourceHelper().getText(
-					ERDesignerBundle.ATTRIBUTEISUSEDININDEX));
+			MessagesHelper.displayErrorMessage(this,
+					getResourceHelper().getText(ERDesignerBundle.ATTRIBUTEISUSEDININDEX));
 
 			return;
 		}
@@ -464,11 +475,11 @@ public class TableEditor extends BaseEditor {
 			for (int i = 0; i < indexListModel.getSize(); i++) {
 				Index theTempIndex = (Index) indexListModel.get(i);
 				try {
-					if (theDialect.checkName(theTempIndex.getName()).equals(
-							theDialect.checkName(editingView.getIndexName().getText()))
+					if (theDialect.checkName(theTempIndex.getName())
+							.equals(theDialect.checkName(editingView.getIndexName().getText()))
 							&& !theTempIndex.getSystemId().equals(theIndex.getSystemId())) {
-						MessagesHelper.displayErrorMessage(this, getResourceHelper().getText(
-								ERDesignerBundle.INDEXALREADYEXISTS));
+						MessagesHelper.displayErrorMessage(this,
+								getResourceHelper().getText(ERDesignerBundle.INDEXALREADYEXISTS));
 						return;
 					}
 				} catch (ElementInvalidNameException e) {
@@ -483,8 +494,8 @@ public class TableEditor extends BaseEditor {
 				for (int i = 0; i < indexListModel.getSize(); i++) {
 					Index theTempIndex = (Index) indexListModel.get(i);
 					if ((theTempIndex.getIndexType() == IndexType.PRIMARYKEY && (!theIndex.equals(theTempIndex)))) {
-						MessagesHelper.displayErrorMessage(this, getResourceHelper().getText(
-								ERDesignerBundle.THEREISALREADYAPRIMARYKEY));
+						MessagesHelper.displayErrorMessage(this,
+								getResourceHelper().getText(ERDesignerBundle.THEREISALREADYAPRIMARYKEY));
 						return;
 					}
 				}
@@ -492,8 +503,8 @@ public class TableEditor extends BaseEditor {
 
 			DefaultListModel<IndexExpression> theListModel = editingView.getIndexFieldList().getModel();
 			if (theListModel.getSize() == 0) {
-				MessagesHelper.displayErrorMessage(this, getResourceHelper().getText(
-						ERDesignerBundle.ANINDEXMUSTHAVEATLEASTONEELEMENT));
+				MessagesHelper.displayErrorMessage(this,
+						getResourceHelper().getText(ERDesignerBundle.ANINDEXMUSTHAVEATLEASTONEELEMENT));
 				return;
 			}
 
@@ -548,8 +559,8 @@ public class TableEditor extends BaseEditor {
 				indexBindingInfo.model2view();
 				indexBindingInfo.markChanged();
 			} catch (ElementAlreadyExistsException e) {
-				MessagesHelper.displayErrorMessage(this, getResourceHelper().getText(
-						ERDesignerBundle.ATTRIBUTEALREADYPARTOFINDEX));
+				MessagesHelper.displayErrorMessage(this,
+						getResourceHelper().getText(ERDesignerBundle.ATTRIBUTEALREADYPARTOFINDEX));
 			}
 		}
 	}
@@ -715,7 +726,8 @@ public class TableEditor extends BaseEditor {
 	}
 
 	/**
-	 * Will be called if editing of an attribute name was canceled and the name is null or empty.
+	 * Will be called if editing of an attribute name was canceled and the name is
+	 * null or empty.
 	 *
 	 * @param aAttribute
 	 */

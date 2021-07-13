@@ -1204,5 +1204,8 @@
             <Text lang="de">Kommentar bearbeiten</Text>
             <Text lang="en">Edit Comment</Text>
         </Entry>
+        <Entry id="DOYOUREALLYWANTTOSAVECHANGES">
+            <Text lang="en">Do you really want to save changes?</Text>
+        </Entry>
     </Bundle>
 </Resource>
